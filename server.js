@@ -1,15 +1,17 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
 
-const url =
-  "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries";
+const url = "https://www.reddit.com/r/cscareerquestions/";
 
 async function run() {
   try {
     const { data } = await axios.get(url);
-    console.log(data);
     const $ = cheerio.load(data);
-    console.log($("h3").get());
+    const activity = $(
+      'div[data-testid="subreddit-sidebar"] div:first-child div:last-child div:nth-child(2) div:nth-child(2)'
+    ).get()[0];
+    const num = $(activity).text().replaceAll("Online", "").replaceAll(",", "");
+    console.log(num);
   } catch (err) {
     console.log(err.message);
   }
